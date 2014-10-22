@@ -44,25 +44,23 @@ def shopping_cart():
     # and add it to the retrieved list of attributes.
     if "cart" in session:
         melons = []
+        running_total = 0
         for key in session["cart"]:
-            # session[id][1] += 1
-            print "2 ---------------"
-            print "key = ", 
-            print key
-            # melon = model.get_melon_by_id(key)
-                    # melon = Melon(row[0], row[1], row[2], row[3], row[4], row[5],
-                    #   row[6], row[7])
+
             melon =  model.get_melon_by_id(key)
-            print "2.0 ###################################"
+
             total_price = melon.price * session["cart"][key]
             print total_price
-            # add the quantiry of the specific melon to the details
-    # <tr><th>Melon Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>
+
             melons = melons + [[melon.common_name, session["cart"][key], 
                                melon.price, total_price]]
             print "melons =",
             print melons
+            running_total = running_total + total_price
+            print "Order total = ", running_total
 
+        session["order total"] = running_total
+        print "session = ", session
     return render_template("cart.html", melons = melons)
 
     # return render_template("cart.html")
@@ -89,13 +87,13 @@ def add_to_cart(id):
      #     add "melon name key : [qty = 1, price] "    
     
     # the following lines print to the "terminal window"
-    id = str(id)
+    id = str(id)    
     print 0.0 , "0 +++++++++++++++++++++++++++++++++++"
     print "id = ",
     print id
-    print "  value = ",
-    print session["cart"].get(id)
     if "cart" in session:
+        print "  value = ",
+        print session["cart"].get(id)
         if str(id) in session["cart"]:
                 # session[id][1] += 1
             session["cart"][id] += 1
@@ -115,6 +113,7 @@ def add_to_cart(id):
     # return "Successfully added to cart! id = %r qty =%r" % (id, session[id])
 
     #???flash "Successfully added to cart! id = %r qty =%r" % (id, session[id])
+
     flash("The melon was successfully added to the cart.")
     return redirect("/cart")
 
@@ -127,7 +126,8 @@ def show_login():
 def process_login():
     """TODO: Receive the user's login credentials located in the 'request.form'
     dictionary, look up the user, and store them in the session."""
-    return "Oops! This needs to be implemented"
+    # return "Oops! This needs to be implemented"
+    return redirect("/melons")
 
 
 @app.route("/checkout")
